@@ -5,6 +5,7 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__,static_folder='./static')
 d = MTCNN()
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -13,12 +14,12 @@ def index():
 def go():
     if(request.method == 'POST'):
         print(request.files.get('image-file',''))
-        if 'image-file' not in request.files:
+        if 'image-file' not in request.files: # Handle empty/bad post
             return redirect('/')
-        image_to_process = request.files['image-file']
+        image_to_process = request.files['image-file'] # Get data
         fn = image_to_process.filename
         fn = secure_filename(fn)
-        image_to_process.save('./static/images/test.png')
+        image_to_process.save('./static/images/test.png') # Save locally for processing
         f = cv2.imread('./static/images/test.png')
         g = cv2.cvtColor(f,cv2.COLOR_BGR2RGB)
         faces = d.detect_faces(g)

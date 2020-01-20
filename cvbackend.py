@@ -1,10 +1,9 @@
 import cv2
 from mtcnn.mtcnn import MTCNN
 
-class ImgProcessor:
-    def __init__(self):
-        
-
+class ProcessedIMG:
+    def __init__(self, data):
+        img = cv2.imread(data, cv2.COLOR_BGR2RGB)
 video = cv2.VideoCapture(0)
 d = MTCNN()
 
