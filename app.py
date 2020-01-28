@@ -3,6 +3,10 @@ from flask import Flask, render_template, redirect, request
 from mtcnn.mtcnn import MTCNN
 import cv2, base64
 import numpy as np
+<<<<<<< HEAD
+=======
+from mtcnn.mtcnn import MTCNN
+>>>>>>> 0171bae30ad642d0773af70158b961ef7cea6249
 import math
 
 # Constructors
@@ -42,6 +46,7 @@ def go():
             h = face.get('box')[3]
             cv2.rectangle(f,(x,y), (x+w,y+h),(0,255,0), 2)
 
+<<<<<<< HEAD
             # Show facial features
             if(not draw == None):
                 circle_rad = int(math.ceil(h/25))
@@ -60,6 +65,24 @@ def go():
                 cv2.circle(f,mouth_left,circle_rad,face_feature_color,2)
                 mouth_right = kp.get('mouth_right')
                 cv2.circle(f,mouth_right,circle_rad,face_feature_color,2)
+=======
+            circle_rad = int(math.ceil(h/25))
+            face_feature_color = (0,0,255)
+
+            kp = face.get('keypoints')
+            left_eye = kp.get('left_eye')
+            cv2.circle(f,left_eye,circle_rad,face_feature_color,2)
+            right_eye = kp.get('right_eye')
+            cv2.circle(f,right_eye,circle_rad,face_feature_color,2)
+            
+            nose = kp.get('nose')
+            cv2.circle(f, nose, circle_rad, face_feature_color,2)
+
+            mouth_left = kp.get('mouth_left')
+            cv2.circle(f,mouth_left,circle_rad,face_feature_color,2)
+            mouth_right = kp.get('mouth_right')
+            cv2.circle(f,mouth_right,circle_rad,face_feature_color,2)
+>>>>>>> 0171bae30ad642d0773af70158b961ef7cea6249
 
             retval, buffer = cv2.imencode('.png', f)
         data_uri = base64.b64encode(buffer).decode('ascii')
