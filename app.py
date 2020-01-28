@@ -2,9 +2,7 @@ from flask import Flask, render_template, redirect, request, flash
 import cv2, base64
 import numpy as np
 from mtcnn.mtcnn import MTCNN
-from matplotlib import pyplot
-from matplotlib.patches import Rectangle
-from matplotlib.patches import Circle
+import math
 
 app = Flask(__name__,static_folder='./static')
 d = MTCNN()
@@ -26,11 +24,31 @@ def go():
         g = cv2.cvtColor(f,cv2.COLOR_BGR2RGB)
         faces = d.detect_faces(g)
         for face in faces:
+            # print(face)
+
             x = face.get('box')[0]
             y = face.get('box')[1]
             w = face.get('box')[2]
             h = face.get('box')[3]
-            cv2.rectangle(f,(x,y), (x+w,y+h), (0,255,0), 2)
+            cv2.rectangle(f,(x,y), (x+w,y+h),(0,255,0), 2)
+
+            circle_rad = int(math.ceil(h/25))
+            face_feature_color = (0,0,255)
+
+            kp = face.get('keypoints')
+            left_eye = kp.get('left_eye')
+            cv2.circle(f,left_eye,circle_rad,face_feature_color,2)
+            right_eye = kp.get('right_eye')
+            cv2.circle(f,right_eye,circle_rad,face_feature_color,2)
+            
+            nose = kp.get('nose')
+            cv2.circle(f, nose, circle_rad, face_feature_color,2)
+
+            mouth_left = kp.get('mouth_left')
+            cv2.circle(f,mouth_left,circle_rad,face_feature_color,2)
+            mouth_right = kp.get('mouth_right')
+            cv2.circle(f,mouth_right,circle_rad,face_feature_color,2)
+
             retval, buffer = cv2.imencode('.png', f)
         data_uri = base64.b64encode(buffer).decode('ascii')
         return render_template('image.html', image=data_uri)
